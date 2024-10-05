@@ -23,11 +23,23 @@ const AdminPage = () => {
   const [newItemBody, setNewItemBody] = useState('');
 
   useEffect(() => {
-    axios
-      .get('https://jsonplaceholder.typicode.com/posts')
-      .then((response) => setData(response.data.slice(0, 5)))
-      .catch((error) => console.error('Error al obtener los datos', error));
+    const storedData = localStorage.getItem('adminData');
+
+    if (storedData) {
+      setData(JSON.parse(storedData));
+    } else {
+      axios
+        .get('https://jsonplaceholder.typicode.com/posts')
+        .then((response) => {
+          setData(response.data.slice(0, 5));
+        })
+        .catch((error) => console.error('Error al obtener los datos', error));
+    }
   }, []);
+
+  const saveDataToLocalStorage = (updatedData: any[]) => {
+    localStorage.setItem('adminData', JSON.stringify(updatedData));
+  };
 
   const handleTitleChange = (id: number, value: string) => {
     setEditedTitles((prev) => ({
@@ -54,6 +66,7 @@ const AdminPage = () => {
         : item
     );
     setData(updatedData);
+    saveDataToLocalStorage(updatedData);
     setEditedTitles((prev) => ({ ...prev, [id]: '' }));
     setEditedBodies((prev) => ({ ...prev, [id]: '' }));
   };
@@ -64,7 +77,9 @@ const AdminPage = () => {
       title: newItemTitle,
       body: newItemBody,
     };
-    setData([...data, newItem]);
+    const updatedData = [...data, newItem];
+    setData(updatedData);
+    saveDataToLocalStorage(updatedData);
     setNewItemTitle('');
     setNewItemBody('');
   };

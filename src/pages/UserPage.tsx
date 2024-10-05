@@ -9,22 +9,42 @@ const UserPage = () => {
   useEffect(() => {
     const API_URL = process.env.REACT_APP_API_URL;
 
-    axios
-      .get(`${API_URL}/posts`)
-      .then((response) => {
-        setData(response.data.slice(0, 5));
-        console.log('Datos de la API:', response.data);
-      })
-      .catch((error) => console.error('Error al obtener los datos', error));
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/posts`);
+        const apiData = response.data.slice(0, 5);
+
+        const storedData = localStorage.getItem('adminData');
+        const localData = storedData ? JSON.parse(storedData) : [];
+
+        const combinedData = apiData.map((item: any) => {
+          const localItem = localData.find(
+            (local: any) => local.id === item.id
+          );
+          return localItem || item;
+        });
+
+        const newItems = localData.filter(
+          (local: any) => local.id > apiData.length
+        );
+        const finalData = [...combinedData, ...newItems];
+
+        setData(finalData);
+      } catch (error) {
+        console.error('Error al obtener los datos de la API:', error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (
     <Box p={3}>
       <Typography variant='h4' gutterBottom>
-        Bienvenido, Usuarioa
+        Bienvenido, Usuario
       </Typography>
       <LogoutButton />
-      <Typography variant='body1'>Aquí están tus datos simulados:</Typography>
+      <Typography variant='body1'>Aquí están los datos disponibles:</Typography>
 
       <List>
         {data.map((item) => (
