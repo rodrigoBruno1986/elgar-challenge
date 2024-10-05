@@ -9,6 +9,7 @@ import {
   TextField,
 } from '@mui/material';
 import axios from 'axios';
+import LogoutButton from '../components/LogoutButton';
 
 const AdminPage = () => {
   const [data, setData] = useState<any[]>([]);
@@ -73,6 +74,7 @@ const AdminPage = () => {
       <Typography variant='h4' gutterBottom>
         Panel de Administrador
       </Typography>
+      <LogoutButton />
       <Typography variant='body1'>
         Aquí puedes ver, editar y crear nuevos datos:
       </Typography>

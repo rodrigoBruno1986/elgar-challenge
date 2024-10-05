@@ -14,7 +14,7 @@ const RegisterPage = () => {
       return;
     }
 
-    const storedUsers = localStorage.getItem('users');
+    const storedUsers = sessionStorage.getItem('users'); // Cambiado a sessionStorage
     const users = storedUsers ? JSON.parse(storedUsers) : {};
 
     if (users[username]) {
@@ -23,11 +23,9 @@ const RegisterPage = () => {
     }
 
     const newUser = { username, password, role };
-
     users[username] = newUser;
-    localStorage.setItem('users', JSON.stringify(users));
+    sessionStorage.setItem('users', JSON.stringify(users)); // Cambiado a sessionStorage
 
-    alert('Usuario registrado exitosamente, ahora puedes iniciar sesión.');
     navigate('/login');
   };
 

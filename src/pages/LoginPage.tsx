@@ -12,7 +12,7 @@ const LoginPage = () => {
   const handleLogin = async () => {
     try {
       await login(username, password);
-      const storedRole = localStorage.getItem('role');
+      const storedRole = sessionStorage.getItem('role');
       if (storedRole === 'admin') {
         navigate('/admin');
       } else {

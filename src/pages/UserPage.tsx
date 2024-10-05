@@ -21,7 +21,7 @@ const UserPage = () => {
   return (
     <Box p={3}>
       <Typography variant='h4' gutterBottom>
-        Bienvenido, Usuario
+        Bienvenido, Usuarioa
       </Typography>
       <LogoutButton />
       <Typography variant='body1'>Aquí están tus datos simulados:</Typography>

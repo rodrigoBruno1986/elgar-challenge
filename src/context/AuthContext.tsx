@@ -21,11 +21,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [userRole, setUserRole] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true); // Estado de carga inicial
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    const storedRole = localStorage.getItem('role');
+    const storedToken = sessionStorage.getItem('token');
+    const storedRole = sessionStorage.getItem('role');
+
+    console.log('Token cargado desde sessionStorage:', storedToken);
+    console.log('Rol cargado desde sessionStorage:', storedRole);
 
     if (storedToken && storedRole) {
       setToken(storedToken);
@@ -37,15 +40,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const login = async (username: string, password: string) => {
-    const storedUsers = localStorage.getItem('users');
+    const storedUsers = sessionStorage.getItem('users');
     const users = storedUsers ? JSON.parse(storedUsers) : {};
 
     if (users[username] && users[username].password === password) {
       const role = users[username].role;
       const simulatedToken = `fake-token-for-${username}`;
 
-      localStorage.setItem('token', simulatedToken);
-      localStorage.setItem('role', role);
+      sessionStorage.setItem('token', simulatedToken);
+      sessionStorage.setItem('role', role);
 
       setIsAuthenticated(true);
       setToken(simulatedToken);
@@ -59,8 +62,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsAuthenticated(false);
     setUserRole(null);
     setToken(null);
-    localStorage.removeItem('token');
-    localStorage.removeItem('role');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('role');
   };
 
   return (

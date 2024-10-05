@@ -16,21 +16,17 @@ import ProtectedRoute from './components/ProtectedRoute';
 const RequireAuth = () => {
   const { isAuthenticated, userRole, loading } = useAuth();
 
-  if (loading) {
-    return <div>Cargando...</div>;
-  }
+  if (loading) return <div>Cargando...</div>;
 
-  if (!isAuthenticated) {
-    return <Navigate to='/login' />;
-  }
+  if (!isAuthenticated) return <Navigate to='/login' />;
 
   if (userRole === 'admin') {
     return <Navigate to='/admin' />;
   } else if (userRole === 'user') {
     return <Navigate to='/user' />;
-  } else {
-    return <Navigate to='/unauthorized' />;
   }
+
+  return <Navigate to='/login' />;
 };
 
 function App() {
@@ -41,7 +37,6 @@ function App() {
           <Route path='/' element={<RequireAuth />} />
 
           <Route path='/login' element={<LoginPage />} />
-
           <Route path='/register' element={<RegisterPage />} />
 
           <Route element={<ProtectedRoute roleRequired='user' />}>
@@ -51,7 +46,6 @@ function App() {
             <Route path='/admin' element={<AdminPage />} />
           </Route>
 
-          {/* Ruta para página de acceso denegado */}
           <Route path='/unauthorized' element={<UnauthorizedPage />} />
         </Routes>
       </Router>
