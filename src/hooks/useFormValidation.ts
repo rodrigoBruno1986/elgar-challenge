@@ -1,27 +1,11 @@
 import { useState } from 'react';
 import { AnyObjectSchema } from 'yup';
 
-interface ValidationErrors {
-  [key: string]: string;
-}
+const useFormValidation = (initialValues: any, schema: AnyObjectSchema) => {
+  const [values, setValues] = useState(initialValues);
+  const [errors, setErrors] = useState<any>({});
 
-interface UseFormValidationReturn<T> {
-  values: T;
-  errors: ValidationErrors;
-  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleSubmit: (
-    callback: () => void
-  ) => (event: React.FormEvent<HTMLFormElement>) => void;
-}
-
-function useFormValidation<T>(
-  initialValues: T,
-  schema: AnyObjectSchema
-): UseFormValidationReturn<T> {
-  const [values, setValues] = useState<T>(initialValues);
-  const [errors, setErrors] = useState<ValidationErrors>({});
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: any) => {
     const { name, value } = event.target;
     setValues({
       ...values,
@@ -29,22 +13,23 @@ function useFormValidation<T>(
     });
   };
 
-  const handleSubmit =
-    (callback: () => void) =>
-    async (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      try {
-        await schema.validate(values, { abortEarly: false });
+  const handleSubmit = (onSubmit: () => void) => (event: any) => {
+    event.preventDefault();
+
+    schema
+      .validate(values, { abortEarly: false })
+      .then(() => {
         setErrors({});
-        callback();
-      } catch (validationErrors: any) {
-        const formattedErrors: ValidationErrors = {};
+        onSubmit();
+      })
+      .catch((validationErrors) => {
+        const formattedErrors: any = {};
         validationErrors.inner.forEach((error: any) => {
           formattedErrors[error.path] = error.message;
         });
         setErrors(formattedErrors);
-      }
-    };
+      });
+  };
 
   return {
     values,
@@ -52,6 +37,6 @@ function useFormValidation<T>(
     handleChange,
     handleSubmit,
   };
-}
+};
 
 export default useFormValidation;

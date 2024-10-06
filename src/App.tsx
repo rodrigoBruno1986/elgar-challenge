@@ -1,5 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider } from './context/AuthContext';
 import LoginPage from './pages/LoginPage';
 import UserPage from './pages/UserPage';
@@ -7,24 +9,22 @@ import AdminPage from './pages/AdminPage';
 import UnauthorizedPage from './pages/UnauthorizedPage';
 import RegisterPage from './pages/RegisterPage';
 import ProtectedRoute from './components/ProtectedRoute';
-import MainLayout from './pages/MainLayout'; // Importamos MainLayout
+import MainLayout from './pages/MainLayout';
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <Routes>
-          {/* Rutas públicas (sin MainLayout) */}
           <Route path='/login' element={<LoginPage />} />
           <Route path='/register' element={<RegisterPage />} />
 
-          {/* Rutas protegidas */}
           <Route
             path='/user'
             element={
               <ProtectedRoute roleRequired='user'>
                 <MainLayout>
-                  <UserPage /> {/* Página del usuario */}
+                  <UserPage />
                 </MainLayout>
               </ProtectedRoute>
             }
@@ -35,15 +35,15 @@ function App() {
             element={
               <ProtectedRoute roleRequired='admin'>
                 <MainLayout>
-                  <AdminPage /> {/* Página del admin */}
+                  <AdminPage />
                 </MainLayout>
               </ProtectedRoute>
             }
           />
 
-          {/* Página de acceso denegado */}
           <Route path='/unauthorized' element={<UnauthorizedPage />} />
         </Routes>
+        <ToastContainer />
       </Router>
     </AuthProvider>
   );

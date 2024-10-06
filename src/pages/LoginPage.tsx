@@ -2,6 +2,7 @@ import React from 'react';
 import { TextField, Button, Box } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import useToast from '../hooks/useToast';
 import useFormValidation from '../hooks/useFormValidation';
 import loginSchema from '../validation/loginSchema';
 import styles from './styles/LoginPage.module.css';
@@ -14,23 +15,27 @@ const initialValues = {
 const LoginPage = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
-
   const { values, errors, handleChange, handleSubmit } = useFormValidation(
     initialValues,
     loginSchema
   );
 
+  const { showSuccess, showError } = useToast();
+
   const onSubmit = async () => {
     try {
       await login(values.username, values.password);
       const storedRole = sessionStorage.getItem('role');
+
+      showSuccess('Login exitoso!');
+
       if (storedRole === 'admin') {
         navigate('/admin');
       } else {
         navigate('/user');
       }
     } catch (error) {
-      alert('Credenciales incorrectas. Intenta de nuevo.');
+      showError('Credenciales incorrectas. Intenta de nuevo.');
     }
   };
 
@@ -41,7 +46,7 @@ const LoginPage = () => {
       </Box>
 
       <Box className={styles.formSection}>
-        <h1 className={styles.title}>Challenge Ssr User </h1>
+        <h1 className={styles.title}>Challenge Ssr User</h1>
         <Box
           className={styles.form}
           component='form'
