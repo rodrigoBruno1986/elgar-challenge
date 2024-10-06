@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { TextField, Button, Box } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { Button, TextField, Box } from '@mui/material';
+import styles from './styles/LoginPage.module.css';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
@@ -28,41 +29,63 @@ const LoginPage = () => {
   };
 
   return (
-    <Box
-      display='flex'
-      flexDirection='column'
-      alignItems='center'
-      justifyContent='center'
-      height='100vh'
-    >
-      <h2>Iniciar Sesión</h2>
-      <TextField
-        label='Nombre de Usuario'
-        variant='outlined'
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        margin='normal'
-      />
-      <TextField
-        label='Contraseña'
-        variant='outlined'
-        type='password'
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        margin='normal'
-      />
-      <Button variant='contained' color='primary' onClick={handleLogin}>
-        INICIAR SESIÓN
-      </Button>
+    <Box className={styles.container}>
+      <Box className={styles.imageSection}>
+        <img src='/image.png' alt='Tech Image' className={styles.image} />
+      </Box>
 
-      <Button
-        variant='text'
-        color='secondary'
-        onClick={handleRegisterRedirect}
-        sx={{ mt: 2 }}
-      >
-        ¿No tienes una cuenta? Registrarse
-      </Button>
+      <Box className={styles.formSection}>
+        <h1 className={styles.title}>Challenge Ssr User </h1>
+        <Box className={styles.form}>
+          <TextField
+            className={styles.inputField}
+            label='Usuario'
+            variant='outlined'
+            fullWidth
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            sx={{
+              backgroundColor: '#f9f9f9',
+              fontFamily: 'Futura PT Light',
+              marginTop: '1rem',
+            }}
+          />
+          <TextField
+            className={styles.inputField}
+            label='Contrasena'
+            type='password'
+            variant='outlined'
+            fullWidth
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            sx={{
+              backgroundColor: '#f9f9f9',
+              fontFamily: 'Futura PT Light',
+              marginTop: '1rem',
+            }}
+          />
+          <Button
+            variant='contained'
+            className={styles.loginButton}
+            onClick={handleLogin}
+            sx={{
+              marginTop: '1rem',
+            }}
+          >
+            Aceptar
+          </Button>
+          <Button
+            variant='text'
+            className={styles.registerButton}
+            onClick={handleRegisterRedirect}
+            sx={{
+              marginTop: '1rem',
+            }}
+          >
+            ¿No tienes un usuario? Registrarse
+          </Button>
+        </Box>
+      </Box>
     </Box>
   );
 };
