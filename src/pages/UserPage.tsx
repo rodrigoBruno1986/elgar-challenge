@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, List, ListItem, ListItemText } from '@mui/material';
 import axios from 'axios';
-import LogoutButton from '../components/LogoutButton';
+import { useAuth } from '../context/AuthContext';
 
 const UserPage = () => {
   const [data, setData] = useState<any[]>([]);
+  const { username } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,9 +42,8 @@ const UserPage = () => {
   return (
     <Box p={3}>
       <Typography variant='h4' gutterBottom>
-        Bienvenido, Usuario
+        {`Bienvenido, ${username || 'Usuario'}`}
       </Typography>
-      <LogoutButton />
       <Typography variant='body1'>Aquí están los datos disponibles:</Typography>
 
       <List>

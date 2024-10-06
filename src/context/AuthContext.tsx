@@ -13,6 +13,7 @@ type AuthContextType = {
   loading: boolean;
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
+  username: string | null;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -22,17 +23,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [userRole, setUserRole] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [username, setUsername] = useState<string | null>(null);
 
   useEffect(() => {
     const storedToken = sessionStorage.getItem('token');
     const storedRole = sessionStorage.getItem('role');
+    const storedUsername = sessionStorage.getItem('username');
 
     console.log('Token cargado desde sessionStorage:', storedToken);
     console.log('Rol cargado desde sessionStorage:', storedRole);
 
-    if (storedToken && storedRole) {
+    if (storedToken && storedRole && storedUsername) {
       setToken(storedToken);
       setUserRole(storedRole);
+      setUsername(storedUsername);
       setIsAuthenticated(true);
     }
 
@@ -49,10 +53,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       sessionStorage.setItem('token', simulatedToken);
       sessionStorage.setItem('role', role);
+      sessionStorage.setItem('username', username);
 
       setIsAuthenticated(true);
       setToken(simulatedToken);
       setUserRole(role);
+      setUsername(username);
     } else {
       throw new Error('Credenciales incorrectas');
     }
@@ -68,7 +74,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, userRole, token, loading, login, logout }}
+      value={{
+        isAuthenticated,
+        userRole,
+        token,
+        loading,
+        login,
+        logout,
+        username,
+      }}
     >
       {children}
     </AuthContext.Provider>

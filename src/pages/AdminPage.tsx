@@ -9,7 +9,7 @@ import {
   TextField,
 } from '@mui/material';
 import axios from 'axios';
-import LogoutButton from '../components/LogoutButton';
+import { useAuth } from '../context/AuthContext';
 
 const AdminPage = () => {
   const [data, setData] = useState<any[]>([]);
@@ -21,6 +21,8 @@ const AdminPage = () => {
   );
   const [newItemTitle, setNewItemTitle] = useState('');
   const [newItemBody, setNewItemBody] = useState('');
+
+  const { username } = useAuth();
 
   useEffect(() => {
     const storedData = localStorage.getItem('adminData');
@@ -87,9 +89,8 @@ const AdminPage = () => {
   return (
     <Box p={3}>
       <Typography variant='h4' gutterBottom>
-        Panel de Administrador
+        {`Bienvenido, ${username || 'Administrador'}`}{' '}
       </Typography>
-      <LogoutButton />
       <Typography variant='body1'>
         Aquí puedes ver, editar y crear nuevos datos:
       </Typography>

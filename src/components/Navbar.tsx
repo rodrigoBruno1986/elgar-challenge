@@ -11,14 +11,16 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const pages = ['List', 'Edit List'];
-const settings = ['Profile', 'Account'];
+const settings = ['Logout'];
 
 function Navbar() {
-  const { userRole } = useAuth();
+  const { userRole, logout } = useAuth();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -43,6 +45,11 @@ function Navbar() {
     setAnchorElUser(null);
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   const handleNavClick = (page: string) => {
     const currentPath = window.location.pathname;
 
@@ -60,10 +67,19 @@ function Navbar() {
     handleCloseNavMenu();
   };
 
+  const handleUserMenuClick = (setting: string) => {
+    if (setting === 'Logout') {
+      handleLogout();
+    } else {
+      handleCloseUserMenu();
+    }
+  };
+
   return (
     <AppBar position='static'>
       <Container maxWidth='xl'>
         <Toolbar disableGutters>
+          {/* Logo y enlaces */}
           <Typography
             variant='h6'
             noWrap
@@ -82,6 +98,7 @@ function Navbar() {
             LOGO
           </Typography>
 
+          {/* Menú móvil */}
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size='large'
@@ -96,15 +113,9 @@ function Navbar() {
             <Menu
               id='menu-appbar'
               anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
               keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
+              transformOrigin={{ vertical: 'top', horizontal: 'left' }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{ display: { xs: 'block', md: 'none' } }}
@@ -136,6 +147,7 @@ function Navbar() {
             LOGO
           </Typography>
 
+          {/* Menú escritorio */}
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
@@ -148,33 +160,30 @@ function Navbar() {
             ))}
           </Box>
 
+          {/* Menú de usuario junto al avatar */}
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title='Open settings'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt='Remy Sharp' src='/static/images/avatar/2.jpg' />
+                {/* Ícono del usuario con flecha */}
+                <Box display='flex' alignItems='center'>
+                  <AccountCircleIcon sx={{ mr: 1 }} /> {/* Ícono de usuario */}
+                  <ExpandMoreIcon /> {/* Flecha hacia abajo */}
+                </Box>
               </IconButton>
             </Tooltip>
             <Menu
               sx={{ mt: '45px' }}
               id='menu-appbar'
               anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
+              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
               keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
+              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign='center'>{setting}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem onClick={() => handleLogout()}>
+                <Typography textAlign='center'>Logout</Typography>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>

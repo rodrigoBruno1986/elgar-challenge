@@ -18,7 +18,6 @@ const useFormValidation = (initialValues: any, schema: AnyObjectSchema) => {
         await schema.validateAt(name, { ...values, [name]: value });
         setErrors((prevErrors: any) => ({ ...prevErrors, [name]: '' }));
       } catch (error: any) {
-        // Usamos 'any' aquí
         if (error instanceof ValidationError) {
           setErrors((prevErrors: any) => ({
             ...prevErrors,
@@ -33,7 +32,6 @@ const useFormValidation = (initialValues: any, schema: AnyObjectSchema) => {
         await schema.validateAt(name, { ...values, [name]: value });
         setErrors((prevErrors: any) => ({ ...prevErrors, [name]: '' }));
       } catch (error: any) {
-        // Usamos 'any' aquí
         if (error instanceof ValidationError) {
           setErrors((prevErrors: any) => ({
             ...prevErrors,
@@ -57,7 +55,6 @@ const useFormValidation = (initialValues: any, schema: AnyObjectSchema) => {
         const formattedErrors: any = {};
         validationErrors.inner.forEach((error: ValidationError) => {
           if (error.path) {
-            // Aseguramos que error.path no sea undefined
             formattedErrors[error.path] = error.message;
           }
         });
