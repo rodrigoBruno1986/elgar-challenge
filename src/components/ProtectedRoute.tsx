@@ -1,31 +1,35 @@
 import React from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 interface ProtectedRouteProps {
   roleRequired: 'admin' | 'user';
+  children: React.ReactNode;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ roleRequired }) => {
-  const { isAuthenticated, userRole, token, loading } = useAuth();
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+  roleRequired,
+  children,
+}) => {
+  const { isAuthenticated, userRole, loading } = useAuth();
 
   if (loading) {
     return <div>Cargando...</div>;
   }
 
-  if (!isAuthenticated || !token) {
-    console.log('Redirigiendo a /login porque no está autenticado');
+  if (!isAuthenticated) {
     return <Navigate to='/login' />;
   }
 
-  if (userRole !== roleRequired) {
-    console.log(
-      `Redirigiendo a /unauthorized, rol requerido: ${roleRequired}, rol actual: ${userRole}`
-    );
+  if (roleRequired === 'user' && userRole !== 'user' && userRole !== 'admin') {
     return <Navigate to='/unauthorized' />;
   }
 
-  return <Outlet />;
+  if (roleRequired !== 'user' && userRole !== roleRequired) {
+    return <Navigate to='/unauthorized' />;
+  }
+
+  return <>{children}</>;
 };
 
 export default ProtectedRoute;

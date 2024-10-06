@@ -1,51 +1,47 @@
 import React from 'react';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from 'react-router-dom';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
 import LoginPage from './pages/LoginPage';
 import UserPage from './pages/UserPage';
 import AdminPage from './pages/AdminPage';
 import UnauthorizedPage from './pages/UnauthorizedPage';
 import RegisterPage from './pages/RegisterPage';
 import ProtectedRoute from './components/ProtectedRoute';
-
-const RequireAuth = () => {
-  const { isAuthenticated, userRole, loading } = useAuth();
-
-  if (loading) return <div>Cargando...</div>;
-
-  if (!isAuthenticated) return <Navigate to='/login' />;
-
-  if (userRole === 'admin') {
-    return <Navigate to='/admin' />;
-  } else if (userRole === 'user') {
-    return <Navigate to='/user' />;
-  }
-
-  return <Navigate to='/login' />;
-};
+import MainLayout from './pages/MainLayout'; // Importamos MainLayout
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <Routes>
-          <Route path='/' element={<RequireAuth />} />
-
+          {/* Rutas públicas (sin MainLayout) */}
           <Route path='/login' element={<LoginPage />} />
           <Route path='/register' element={<RegisterPage />} />
 
-          <Route element={<ProtectedRoute roleRequired='user' />}>
-            <Route path='/user' element={<UserPage />} />
-          </Route>
-          <Route element={<ProtectedRoute roleRequired='admin' />}>
-            <Route path='/admin' element={<AdminPage />} />
-          </Route>
+          {/* Rutas protegidas */}
+          <Route
+            path='/user'
+            element={
+              <ProtectedRoute roleRequired='user'>
+                <MainLayout>
+                  <UserPage /> {/* Página del usuario */}
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
 
+          <Route
+            path='/admin'
+            element={
+              <ProtectedRoute roleRequired='admin'>
+                <MainLayout>
+                  <AdminPage /> {/* Página del admin */}
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Página de acceso denegado */}
           <Route path='/unauthorized' element={<UnauthorizedPage />} />
         </Routes>
       </Router>

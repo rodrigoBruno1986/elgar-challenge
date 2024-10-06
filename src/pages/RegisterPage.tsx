@@ -14,7 +14,7 @@ const RegisterPage = () => {
       return;
     }
 
-    const storedUsers = sessionStorage.getItem('users'); // Cambiado a sessionStorage
+    const storedUsers = sessionStorage.getItem('users');
     const users = storedUsers ? JSON.parse(storedUsers) : {};
 
     if (users[username]) {
@@ -24,7 +24,7 @@ const RegisterPage = () => {
 
     const newUser = { username, password, role };
     users[username] = newUser;
-    sessionStorage.setItem('users', JSON.stringify(users)); // Cambiado a sessionStorage
+    sessionStorage.setItem('users', JSON.stringify(users));
 
     navigate('/login');
   };

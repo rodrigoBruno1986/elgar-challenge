@@ -7,12 +7,12 @@ const UserPage = () => {
   const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
-    const API_URL = process.env.REACT_APP_API_URL;
-
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${API_URL}/posts`);
-        const apiData = response.data.slice(0, 5);
+        const response = await axios.get(
+          'https://jsonplaceholder.typicode.com/posts?_limit=5'
+        );
+        const apiData = response.data;
 
         const storedData = localStorage.getItem('adminData');
         const localData = storedData ? JSON.parse(storedData) : [];
@@ -47,11 +47,15 @@ const UserPage = () => {
       <Typography variant='body1'>Aquí están los datos disponibles:</Typography>
 
       <List>
-        {data.map((item) => (
-          <ListItem key={item.id}>
-            <ListItemText primary={item.title} secondary={item.body} />
-          </ListItem>
-        ))}
+        {data.length > 0 ? (
+          data.map((item) => (
+            <ListItem key={item.id}>
+              <ListItemText primary={item.title} secondary={item.body} />
+            </ListItem>
+          ))
+        ) : (
+          <Typography>No hay datos disponibles.</Typography>
+        )}
       </List>
     </Box>
   );

@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [userRole, setUserRole] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true); // Estado de carga inicial
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const storedToken = sessionStorage.getItem('token');
