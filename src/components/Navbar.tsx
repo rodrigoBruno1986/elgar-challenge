@@ -15,10 +15,10 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const pages = ['List', 'Edit List'];
-const settings = ['Profile', 'Account', 'Logout'];
+const settings = ['Profile', 'Account'];
 
 function Navbar() {
-  const { userRole, logout } = useAuth();
+  const { userRole } = useAuth();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -41,11 +41,6 @@ function Navbar() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
-  };
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
   };
 
   const handleNavClick = (page: string) => {

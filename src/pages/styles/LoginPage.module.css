@@ -7,7 +7,7 @@
     justify-content: center;
   }
   
- 
+
   .imageSection {
     width: 50vw; 
     height: 100vh; 
@@ -57,7 +57,6 @@
   .inputField input {
     padding: 15px;
     font-size: 16px;
-    font-family: 'Futura PT Light';
   }
   
 
