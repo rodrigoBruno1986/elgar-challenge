@@ -1,43 +1,64 @@
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f4f4f4;
-  }
-  
-  .formSection {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px;
-    background-color: #fff;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  }
-  
-  .title {
-    font-size: 36px;
-    font-weight: bold;
-    color: #1e90ff;
-    margin-bottom: 20px;
-    font-family: 'Futura PT Light';
-  }
-  
-  .form {
-    width: 100%;
-    max-width: 400px;
-  }
-  
-  .inputField {
-    background-color: #f9f9f9;
-    margin-top: 1rem;
-  }
-  
-  .registerButton {
-    background-color: #32cd32;
-    color: white;
-    width: 100%;
-    padding: 12px;
-    font-family: 'Futura PT Light';
-  }
+  display: flex;
+  min-height: 100vh;
+  background-color: #f4f4f4;
+}
+
+.formSection {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background-color: #fff;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  font-size: 36px;
+  font-weight: bold;
+  color: #1e90ff;
+  margin-bottom: 10px;
+  text-align: center;
+  font-family: 'Futura PT Light';
+}
+
+.form {
+  width: 100%;
+  max-width: 400px;
+  font-family: 'Futura PT Light';
+}
+
+.inputField {
+  background-color: #f9f9f9;
+  margin-top: 1rem;
+}
+
+.inputField input {
+  padding: 15px;
+  font-size: 16px;
+}
+
+.registerButton {
+  background-color: #32cd32;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  width: 100%;
+  padding: 12px;
+  transition: background-color 0.3s ease;
+  margin-top: 1rem;
+}
+
+.registerButton:hover {
+  background-color: #2e8b57;
+}
+
+.backToLoginButton {
+  margin-top: 15px;
+  color: #1e90ff;
+  font-size: 12px;
+  text-align: center;
+  width: 100%;
+}
