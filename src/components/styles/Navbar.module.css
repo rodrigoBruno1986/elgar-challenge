@@ -1,0 +1,23 @@
+
+
+.navbar {
+    z-index: 1200;
+    top: 0;
+    width: 100%;
+  }
+  
+  .logo {
+    width: 147px;
+    margin-right: 2rem;
+  }
+  
+  
+  .content {
+    padding-top: 64px; 
+  }
+  
+  @media (max-width: 600px) {
+    .content {
+      padding-top: 56px; 
+    }
+  }

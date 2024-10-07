@@ -1,7 +1,6 @@
 .container {
-  padding: 2rem;
-  background-color: #f4f4f9;
-  font-family: 'Futura PT Light' !important;
+  padding: 5rem 0rem;
+  background-color: #f4f4f9; 
   
 }
 
@@ -15,21 +14,22 @@
 .header {
   font-size: 1rem;
   font-weight: 700;
-  color: --secondary-color;; 
+  color: #1976d2; 
   margin-bottom: 1.5rem;
-  font-family: 'Futura PT Light';
+  border-bottom:solid 1px grey;
+  height: 50px;
 }
 
 .subheader {
   font-size: 1.2rem;
   color: #555;
-  
 }
 
 .contentButton{
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 2rem;
 }
 
 .createButton {

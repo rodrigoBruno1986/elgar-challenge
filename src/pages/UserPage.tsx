@@ -9,17 +9,18 @@ import {
 } from '@mui/material';
 import { getData } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { DataItem } from '../types/data';
 import styles from './styles/UserPage.module.css';
 import Paginator from '../components/Paginator';
 import SearchBar from '../components/SearchBar';
 
-const ITEMS_PER_PAGE = 3;
+const ITEMS_PER_PAGE = 2;
 
 const UserPage = () => {
-  const [apiData, setApiData] = useState<any[]>([]);
-  const [filteredApiData, setFilteredApiData] = useState<any[]>([]);
-  const [localData, setLocalData] = useState<any[]>([]);
-  const [filteredLocalData, setFilteredLocalData] = useState<any[]>([]);
+  const [apiData, setApiData] = useState<DataItem[]>([]);
+  const [filteredApiData, setFilteredApiData] = useState<DataItem[]>([]);
+  const [localData, setLocalData] = useState<DataItem[]>([]);
+  const [filteredLocalData, setFilteredLocalData] = useState<DataItem[]>([]);
   const { username } = useAuth();
   const [currentPageApi, setCurrentPageApi] = useState(1);
   const [currentPageLocal, setCurrentPageLocal] = useState(1);
@@ -87,8 +88,8 @@ const UserPage = () => {
       </Typography>
 
       <Grid container spacing={4}>
-        <Grid item xs={12} md={6}>
-          <Typography variant='h5' gutterBottom>
+        <Grid item xs={12} md={6} mt={5}>
+          <Typography variant='h6' gutterBottom>
             Datos de la API:
           </Typography>
 
@@ -132,15 +133,17 @@ const UserPage = () => {
           )}
         </Grid>
 
-        <Grid item xs={12} md={6}>
-          <Typography variant='h5' gutterBottom>
+        <Grid item xs={12} md={6} mt={5}>
+          <Typography variant='h6' gutterBottom>
             Datos agregados por el administrador:
           </Typography>
 
-          <SearchBar
-            onSearch={handleSearchLocal}
-            placeholder='Buscar en datos'
-          />
+          {localData.length > 0 && (
+            <SearchBar
+              onSearch={handleSearchLocal}
+              placeholder='Buscar en datos'
+            />
+          )}
 
           {paginatedLocalData.length > 0 ? (
             <>
@@ -178,7 +181,7 @@ const UserPage = () => {
               )}
             </>
           ) : (
-            <Typography>
+            <Typography fontSize={12} color='grey' mt={10} textAlign='center'>
               No hay datos creados por el administrador. Por favor, ingresa al
               panel de administración con el rol de administrador para agregar
               datos.

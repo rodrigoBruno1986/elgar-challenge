@@ -17,10 +17,11 @@ import {
 import { useFormik } from 'formik';
 import dataSchema from '../validation/dataSchema';
 import useToast from '../hooks/useToast';
+import { DataItem } from '../types/data';
 import styles from './styles/AdminPage.module.css';
 
 const AdminPage = () => {
-  const [localData, setLocalData] = useState<any[]>([]);
+  const [localData, setLocalData] = useState<DataItem[]>([]);
   const [open, setOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [editedItemId, setEditedItemId] = useState<number | null>(null);
@@ -35,7 +36,7 @@ const AdminPage = () => {
     setLocalData(localData);
   }, []);
 
-  const saveDataToLocalStorage = (updatedData: any[]) => {
+  const saveDataToLocalStorage = (updatedData: DataItem[]) => {
     localStorage.setItem('adminData', JSON.stringify(updatedData));
   };
 
@@ -63,7 +64,7 @@ const AdminPage = () => {
     },
     validationSchema: dataSchema,
     onSubmit: (values) => {
-      const newItem = {
+      const newItem: DataItem = {
         id: localData.length + 1,
         ...values,
       };
@@ -139,7 +140,7 @@ const AdminPage = () => {
               <Typography variant='body2' className={styles.cardText} mt={1}>
                 {item.body}
               </Typography>
-              <Box display='flex' gap={2} mt={3}>
+              <Box display='flex' gap={2} mt={3} justifyContent='flex-end'>
                 <Button
                   variant='contained'
                   color='primary'

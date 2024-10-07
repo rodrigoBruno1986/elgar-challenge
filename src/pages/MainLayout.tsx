@@ -8,7 +8,10 @@ interface MainLayoutProps {
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+    <Box
+      sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}
+      mt={6}
+    >
       <Navbar />
       <Box component='main' sx={{ flexGrow: 1, p: 3 }}>
         <Container>{children}</Container>{' '}

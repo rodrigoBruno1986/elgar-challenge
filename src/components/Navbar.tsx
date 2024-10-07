@@ -11,8 +11,11 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import styles from './styles/Navbar.module.css';
+import { toast } from 'react-toastify';
 
 const pages = ['Lista', 'Editar Lista'];
 
@@ -44,6 +47,7 @@ function Navbar() {
 
   const handleLogout = () => {
     logout();
+    toast.info('Has cerrado sesión exitosamente', { position: 'bottom-right' });
     navigate('/login');
   };
 
@@ -65,9 +69,9 @@ function Navbar() {
   };
 
   return (
-    <AppBar position='static'>
+    <AppBar position='fixed'>
       <Container maxWidth='xl'>
-        <Toolbar disableGutters>
+        <Toolbar disableGutters className={styles.navbar}>
           <Box
             component='a'
             href='#'
@@ -79,13 +83,8 @@ function Navbar() {
               textDecoration: 'none',
             }}
           >
-            <img
-              src='logo.png'
-              alt='Logo'
-              style={{ height: '40px', width: 'auto' }}
-            />
+            <img src='logo.png' alt='Logo' className={styles.logo} />
           </Box>
-
           <Box
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
             justifyContent='end'
@@ -121,7 +120,6 @@ function Navbar() {
               </MenuItem>
             </Menu>
           </Box>
-
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
@@ -133,12 +131,12 @@ function Navbar() {
               </Button>
             ))}
           </Box>
-
           <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex' } }}>
             <Tooltip title='Open settings'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Box display='flex' alignItems='center'>
                   <AccountCircleIcon sx={{ mr: 1 }} />
+                  <ArrowDropDownIcon />
                 </Box>
               </IconButton>
             </Tooltip>

@@ -20,14 +20,14 @@ const LoginPage = () => {
     loginSchema
   );
 
-  const { showSuccess, showError } = useToast();
+  const { showError, showInfo } = useToast();
 
   const onSubmit = async () => {
     try {
       await login(values.username, values.password);
       const storedRole = sessionStorage.getItem('role');
 
-      showSuccess('Login exitoso!');
+      showInfo('Login exitoso!');
 
       if (storedRole === 'admin') {
         navigate('/admin');

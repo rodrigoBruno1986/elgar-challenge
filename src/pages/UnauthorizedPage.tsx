@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 const UnauthorizedPage = () => {
   const navigate = useNavigate();
 
-  // Navega hacia la página anterior
   const goBack = () => {
     navigate(-1);
   };
