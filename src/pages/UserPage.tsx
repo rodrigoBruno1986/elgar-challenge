@@ -13,6 +13,7 @@ import { DataItem } from '../types/data';
 import styles from './styles/UserPage.module.css';
 import Paginator from '../components/Paginator';
 import SearchBar from '../components/SearchBar';
+import Preloader from '../components/Preloader';
 
 const ITEMS_PER_PAGE = 2;
 
@@ -24,6 +25,7 @@ const UserPage = () => {
   const { username } = useAuth();
   const [currentPageApi, setCurrentPageApi] = useState(1);
   const [currentPageLocal, setCurrentPageLocal] = useState(1);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,8 +45,14 @@ const UserPage = () => {
       setFilteredLocalData(localData);
     };
 
+    const timeoutId = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+
     fetchData();
     fetchLocalData();
+
+    return () => clearTimeout(timeoutId);
   }, []);
 
   const totalPagesApi = Math.ceil(filteredApiData.length / ITEMS_PER_PAGE);
@@ -80,6 +88,10 @@ const UserPage = () => {
     );
     setFilteredLocalData(filteredLocal);
   };
+
+  if (loading) {
+    return <Preloader />;
+  }
 
   return (
     <Box className={styles.container}>
