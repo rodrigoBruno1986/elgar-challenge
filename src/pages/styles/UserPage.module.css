@@ -1,0 +1,37 @@
+.container {
+  padding: 2rem;
+  background-color: #f4f4f9; 
+}
+
+.header {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1976d2; 
+  margin-bottom: 1.5rem;
+}
+
+.subheader {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  color: #555; 
+}
+
+.listItem {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #fff;
+  transition: background-color 0.2s ease;
+  min-height: 150px;
+}
+
+
+.listItemTitle {
+  font-size: 1.25rem;
+  color: #1976d2; 
+  margin-bottom: 0.5rem;
+}
+
+.listItemBody {
+  font-size: 1rem;
+  color: #757575;
+}

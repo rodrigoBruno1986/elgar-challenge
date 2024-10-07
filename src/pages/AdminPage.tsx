@@ -4,129 +4,147 @@ import {
   Typography,
   Button,
   List,
-  ListItem,
-  ListItemText,
   TextField,
+  Card,
+  CardContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
 } from '@mui/material';
-import axios from 'axios';
-import { useAuth } from '../context/AuthContext';
+import styles from './styles/AdminPage.module.css';
 
 const AdminPage = () => {
-  const [data, setData] = useState<any[]>([]);
-  const [editedTitles, setEditedTitles] = useState<{ [key: number]: string }>(
-    {}
-  );
-  const [editedBodies, setEditedBodies] = useState<{ [key: number]: string }>(
-    {}
-  );
+  const [localData, setLocalData] = useState<any[]>([]);
+  const [editedItemId, setEditedItemId] = useState<number | null>(null);
+  const [newTitle, setNewTitle] = useState('');
+  const [newBody, setNewBody] = useState('');
   const [newItemTitle, setNewItemTitle] = useState('');
   const [newItemBody, setNewItemBody] = useState('');
-
-  const { username } = useAuth();
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const storedData = localStorage.getItem('adminData');
-
-    if (storedData) {
-      setData(JSON.parse(storedData));
-    } else {
-      axios
-        .get('https://jsonplaceholder.typicode.com/posts')
-        .then((response) => {
-          setData(response.data.slice(0, 5));
-        })
-        .catch((error) => console.error('Error al obtener los datos', error));
-    }
+    const localData = storedData ? JSON.parse(storedData) : [];
+    setLocalData(localData);
   }, []);
 
   const saveDataToLocalStorage = (updatedData: any[]) => {
     localStorage.setItem('adminData', JSON.stringify(updatedData));
   };
 
-  const handleTitleChange = (id: number, value: string) => {
-    setEditedTitles((prev) => ({
-      ...prev,
-      [id]: value,
-    }));
+  const handleOpenModal = (id: number, title: string, body: string) => {
+    setEditedItemId(id);
+    setNewTitle(title);
+    setNewBody(body);
+    setOpen(true);
   };
 
-  const handleBodyChange = (id: number, value: string) => {
-    setEditedBodies((prev) => ({
-      ...prev,
-      [id]: value,
-    }));
+  const handleCloseModal = () => {
+    setOpen(false);
   };
 
-  const handleEdit = (id: number) => {
-    const updatedData = data.map((item) =>
-      item.id === id
-        ? {
-            ...item,
-            title: editedTitles[id] || item.title,
-            body: editedBodies[id] || item.body,
-          }
+  const handleSaveEdit = () => {
+    const updatedData = localData.map((item) =>
+      item.id === editedItemId
+        ? { ...item, title: newTitle, body: newBody }
         : item
     );
-    setData(updatedData);
+    setLocalData(updatedData);
     saveDataToLocalStorage(updatedData);
-    setEditedTitles((prev) => ({ ...prev, [id]: '' }));
-    setEditedBodies((prev) => ({ ...prev, [id]: '' }));
+    handleCloseModal();
   };
 
   const handleCreate = () => {
     const newItem = {
-      id: data.length + 1,
+      id: localData.length + 1,
       title: newItemTitle,
       body: newItemBody,
     };
-    const updatedData = [...data, newItem];
-    setData(updatedData);
+    const updatedData = [...localData, newItem];
+    setLocalData(updatedData);
     saveDataToLocalStorage(updatedData);
     setNewItemTitle('');
     setNewItemBody('');
   };
 
+  const handleDelete = (id: number) => {
+    const updatedData = localData.filter((item) => item.id !== id);
+    setLocalData(updatedData);
+    saveDataToLocalStorage(updatedData);
+  };
+
   return (
-    <Box p={3}>
-      <Typography variant='h4' gutterBottom>
-        {`Bienvenido, ${username || 'Administrador'}`}{' '}
+    <Box className={styles.container}>
+      <Typography variant='h4' gutterBottom className={styles.header}>
+        Panel de Administrador
       </Typography>
-      <Typography variant='body1'>
-        Aquí puedes ver, editar y crear nuevos datos:
+      <Typography variant='body1' className={styles.subheader}>
+        Aquí puedes crear, editar y eliminar datos:
       </Typography>
 
       <List>
-        {data.map((item) => (
-          <ListItem key={item.id}>
-            <ListItemText primary={item.title} secondary={item.body} />
-            <TextField
-              label='Nuevo Título'
-              variant='outlined'
-              value={editedTitles[item.id] || ''}
-              onChange={(e) => handleTitleChange(item.id, e.target.value)}
-              size='small'
-              margin='normal'
-            />
-            <TextField
-              label='Nuevo Body'
-              variant='outlined'
-              value={editedBodies[item.id] || ''}
-              onChange={(e) => handleBodyChange(item.id, e.target.value)}
-              size='small'
-              margin='normal'
-              sx={{ ml: 2 }}
-            />
-            <Button
-              variant='contained'
-              color='primary'
-              onClick={() => handleEdit(item.id)}
-              sx={{ ml: 2 }}
-            >
-              Editar
-            </Button>
-          </ListItem>
+        {localData.map((item) => (
+          <Card key={item.id} className={styles.card}>
+            <CardContent className={styles.cardContent}>
+              <Typography variant='h6' className={styles.cardTitle}>
+                {item.title}
+              </Typography>
+              <Typography variant='body2' className={styles.cardText}>
+                {item.body}
+              </Typography>
+              <Box display='flex' gap={2}>
+                <Button
+                  variant='contained'
+                  color='primary'
+                  onClick={() =>
+                    handleOpenModal(item.id, item.title, item.body)
+                  }
+                >
+                  Editar
+                </Button>
+                <Button
+                  variant='contained'
+                  className={styles.deleteButton}
+                  onClick={() => handleDelete(item.id)}
+                >
+                  Eliminar
+                </Button>
+              </Box>
+            </CardContent>
+          </Card>
         ))}
       </List>
+
+      <Dialog open={open} onClose={handleCloseModal}>
+        <DialogTitle>Editar Item</DialogTitle>
+        <DialogContent>
+          <TextField
+            label='Título'
+            variant='outlined'
+            value={newTitle}
+            onChange={(e) => setNewTitle(e.target.value)}
+            fullWidth
+            margin='normal'
+          />
+          <TextField
+            label='Contenido'
+            variant='outlined'
+            value={newBody}
+            onChange={(e) => setNewBody(e.target.value)}
+            fullWidth
+            margin='normal'
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseModal} color='secondary'>
+            Cancelar
+          </Button>
+          <Button onClick={handleSaveEdit} color='primary'>
+            Guardar
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Box mt={4}>
         <Typography variant='h6'>Crear un nuevo dato:</Typography>
@@ -137,6 +155,7 @@ const AdminPage = () => {
           onChange={(e) => setNewItemTitle(e.target.value)}
           margin='normal'
           fullWidth
+          className={styles.textField}
         />
         <TextField
           label='Body'
@@ -145,12 +164,13 @@ const AdminPage = () => {
           onChange={(e) => setNewItemBody(e.target.value)}
           margin='normal'
           fullWidth
+          className={styles.textField}
         />
         <Button
           variant='contained'
           color='secondary'
           onClick={handleCreate}
-          sx={{ mt: 2 }}
+          className={styles.createButton}
         >
           Crear
         </Button>

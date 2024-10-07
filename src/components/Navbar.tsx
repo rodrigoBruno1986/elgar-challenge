@@ -79,7 +79,6 @@ function Navbar() {
     <AppBar position='static'>
       <Container maxWidth='xl'>
         <Toolbar disableGutters>
-          {/* Logo y enlaces */}
           <Typography
             variant='h6'
             noWrap
@@ -98,7 +97,6 @@ function Navbar() {
             LOGO
           </Typography>
 
-          {/* Menú móvil */}
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size='large'
@@ -147,7 +145,6 @@ function Navbar() {
             LOGO
           </Typography>
 
-          {/* Menú escritorio */}
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
@@ -160,14 +157,12 @@ function Navbar() {
             ))}
           </Box>
 
-          {/* Menú de usuario junto al avatar */}
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title='Open settings'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                {/* Ícono del usuario con flecha */}
                 <Box display='flex' alignItems='center'>
-                  <AccountCircleIcon sx={{ mr: 1 }} /> {/* Ícono de usuario */}
-                  <ExpandMoreIcon /> {/* Flecha hacia abajo */}
+                  <AccountCircleIcon sx={{ mr: 1 }} />
+                  <ExpandMoreIcon />
                 </Box>
               </IconButton>
             </Tooltip>
