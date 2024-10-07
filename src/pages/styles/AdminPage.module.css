@@ -1,68 +1,140 @@
 .container {
-    padding: 2rem;
-    background-color: #f4f4f9;
-  }
+  padding: 2rem;
+  background-color: #f4f4f9;
+  font-family: 'Futura PT Light' !important;
   
-  .header {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #1976d2;
-    margin-bottom: 1.5rem;
-  }
+}
+
+.headerBox {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.header {
+  font-size: 1rem;
+  font-weight: 700;
+  color: --secondary-color;; 
+  margin-bottom: 1.5rem;
+  font-family: 'Futura PT Light';
+}
+
+.subheader {
+  font-size: 1.2rem;
+  color: #555;
   
-  .subheader {
-    font-size: 1.2rem;
-    margin-bottom: 1.5rem;
-    color: #555;
-  }
+}
+
+.contentButton{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.createButton {
+  background-color: --secondary-color;;
+  color: white;
+  border-radius: 8px;
+  padding: 0.5rem 1.5rem;
+}
+
+.createButton:hover {
+  background-color: --secondary-color;
+}
+
+.listItem {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #fff;
+  transition: background-color 0.2s ease;
+  min-height: 150px;
+}
+
+.listItem:hover {
+  background-color: #f0f0f0;
+}
+
+
+.card {
+  margin-bottom: 1.5rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+.cardContent {
+  padding: 1.5rem;
+}
+
+.cardTitle {
+  font-size: 1.25rem;
+  color: #1976d2;
+  margin-bottom: 0.5rem;
+}
+
+.cardText {
+  font-size: 1rem;
+  color: #757575;
+  max-height: 60px;
+  overflow: hidden;
+  white-space: normal;  
+  word-wrap: break-word; 
+}
+
+
+
+.ContentInfo{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.listItemTitle {
+  font-size: 1.25rem;
+  color: --secondary-color;
+  margin-bottom: 0.5rem;
   
-  .card {
-    background-color: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 1rem;
-    transition: transform 0.2s ease-in-out;
-  }
-  
-  .card:hover {
-    transform: translateY(-5px);
-  }
-  
-  .cardContent {
-    padding: 1.5rem;
-  }
-  
-  .cardTitle {
-    font-size: 1.25rem;
-    color: #1976d2;
-    margin-bottom: 1rem;
-  }
-  
-  .cardText {
-    font-size: 1rem;
-    color: #757575;
-  }
-  
-  .textField {
-    margin-bottom: 1rem;
-    width: 100%;
-  }
-  
-  .createButton {
-    background-color: #1976d2;
-    color: white;
+}
+
+.listItemBody {
+  font-size: 1rem;
+  color: #757575;
+}
+
+.drawer {
+  padding: 2rem;
+  width: 300px;
+}
+
+.textField {
+  margin-bottom: 1.5rem;
+}
+
+.dataTypograhy{
+  padding: 10px 0px;
+}
+
+.dialogButton {
+  background-color: #d32f2f;
+  color: white;
+}
+
+.dialogButton:hover {
+  background-color: #c62828;
+}
+
+@media (max-width: 768px) {
+  .contentButton {
+    flex-direction: column;
+    align-items: baseline;
+    display: block;
     margin-top: 1rem;
   }
-  
-  .createButton:hover {
-    background-color: #1565c0;
+  .contentButton  button{
+   
+    margin-top: 1rem;
   }
-  .deleteButton {
-    background-color: #d32f2f;
-    color: white;
-  }
-  
-  .deleteButton:hover {
-    background-color: #b71c1c;
-  }
+}

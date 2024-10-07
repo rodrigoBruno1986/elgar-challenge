@@ -4,24 +4,27 @@ import {
   Typography,
   Button,
   List,
-  TextField,
   Card,
   CardContent,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  Drawer,
+  Divider,
+  TextField,
 } from '@mui/material';
+import { useFormik } from 'formik';
+import dataSchema from '../validation/dataSchema';
 import styles from './styles/AdminPage.module.css';
 
 const AdminPage = () => {
   const [localData, setLocalData] = useState<any[]>([]);
-  const [editedItemId, setEditedItemId] = useState<number | null>(null);
-  const [newTitle, setNewTitle] = useState('');
-  const [newBody, setNewBody] = useState('');
-  const [newItemTitle, setNewItemTitle] = useState('');
-  const [newItemBody, setNewItemBody] = useState('');
   const [open, setOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [editedItemId, setEditedItemId] = useState<number | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<number | null>(null);
 
   useEffect(() => {
     const storedData = localStorage.getItem('adminData');
@@ -33,55 +36,92 @@ const AdminPage = () => {
     localStorage.setItem('adminData', JSON.stringify(updatedData));
   };
 
+  const formikEdit = useFormik({
+    initialValues: {
+      title: '',
+      body: '',
+    },
+    validationSchema: dataSchema,
+    onSubmit: (values) => {
+      const updatedData = localData.map((item) =>
+        item.id === editedItemId ? { ...item, ...values } : item
+      );
+      setLocalData(updatedData);
+      saveDataToLocalStorage(updatedData);
+      handleCloseModal();
+    },
+  });
+
+  const formikCreate = useFormik({
+    initialValues: {
+      title: '',
+      body: '',
+    },
+    validationSchema: dataSchema,
+    onSubmit: (values) => {
+      const newItem = {
+        id: localData.length + 1,
+        ...values,
+      };
+      const updatedData = [newItem, ...localData];
+      setLocalData(updatedData);
+      saveDataToLocalStorage(updatedData);
+      setDrawerOpen(false);
+      formikCreate.resetForm();
+    },
+  });
+
   const handleOpenModal = (id: number, title: string, body: string) => {
     setEditedItemId(id);
-    setNewTitle(title);
-    setNewBody(body);
+    formikEdit.setValues({ title, body });
     setOpen(true);
   };
 
   const handleCloseModal = () => {
     setOpen(false);
+    formikEdit.resetForm();
   };
 
-  const handleSaveEdit = () => {
-    const updatedData = localData.map((item) =>
-      item.id === editedItemId
-        ? { ...item, title: newTitle, body: newBody }
-        : item
-    );
-    setLocalData(updatedData);
-    saveDataToLocalStorage(updatedData);
-    handleCloseModal();
+  const handleOpenDeleteDialog = (id: number) => {
+    setItemToDelete(id);
+    setDeleteDialogOpen(true);
   };
 
-  const handleCreate = () => {
-    const newItem = {
-      id: localData.length + 1,
-      title: newItemTitle,
-      body: newItemBody,
-    };
-    const updatedData = [...localData, newItem];
-    setLocalData(updatedData);
-    saveDataToLocalStorage(updatedData);
-    setNewItemTitle('');
-    setNewItemBody('');
+  const handleCloseDeleteDialog = () => {
+    setDeleteDialogOpen(false);
+    setItemToDelete(null);
   };
 
-  const handleDelete = (id: number) => {
-    const updatedData = localData.filter((item) => item.id !== id);
+  const handleDelete = () => {
+    const updatedData = localData.filter((item) => item.id !== itemToDelete);
     setLocalData(updatedData);
     saveDataToLocalStorage(updatedData);
+    handleCloseDeleteDialog();
+  };
+
+  const toggleDrawer = (open: boolean) => {
+    setDrawerOpen(open);
   };
 
   return (
     <Box className={styles.container}>
-      <Typography variant='h4' gutterBottom className={styles.header}>
+      <Typography variant='h5' gutterBottom className={styles.header}>
         Panel de Administrador
       </Typography>
-      <Typography variant='body1' className={styles.subheader}>
-        Aquí puedes crear, editar y eliminar datos:
-      </Typography>
+      <Box className={styles.contentButton}>
+        <Typography variant='body1' className={styles.subheader}>
+          Aquí puedes crear, editar y eliminar datos:
+        </Typography>
+
+        <Button
+          variant='contained'
+          color='secondary'
+          className={styles.createButton}
+          onClick={() => toggleDrawer(true)}
+        >
+          Crear nuevo dato
+        </Button>
+      </Box>
 
       <List>
         {localData.map((item) => (
@@ -90,10 +130,10 @@ const AdminPage = () => {
               <Typography variant='h6' className={styles.cardTitle}>
                 {item.title}
               </Typography>
-              <Typography variant='body2' className={styles.cardText}>
+              <Typography variant='body2' className={styles.cardText} mt={1}>
                 {item.body}
               </Typography>
-              <Box display='flex' gap={2}>
+              <Box display='flex' gap={2} mt={3}>
                 <Button
                   variant='contained'
                   color='primary'
@@ -106,7 +146,7 @@ const AdminPage = () => {
                 <Button
                   variant='contained'
                   className={styles.deleteButton}
-                  onClick={() => handleDelete(item.id)}
+                  onClick={() => handleOpenDeleteDialog(item.id)}
                 >
                   Eliminar
                 </Button>
@@ -117,64 +157,99 @@ const AdminPage = () => {
       </List>
 
       <Dialog open={open} onClose={handleCloseModal}>
-        <DialogTitle>Editar Item</DialogTitle>
+        <DialogTitle>Editar Dato</DialogTitle>
         <DialogContent>
-          <TextField
-            label='Título'
-            variant='outlined'
-            value={newTitle}
-            onChange={(e) => setNewTitle(e.target.value)}
-            fullWidth
-            margin='normal'
-          />
-          <TextField
-            label='Contenido'
-            variant='outlined'
-            value={newBody}
-            onChange={(e) => setNewBody(e.target.value)}
-            fullWidth
-            margin='normal'
-          />
+          <form onSubmit={formikEdit.handleSubmit}>
+            <TextField
+              label='Título'
+              variant='outlined'
+              fullWidth
+              margin='normal'
+              name='title'
+              value={formikEdit.values.title}
+              onChange={formikEdit.handleChange}
+              error={!!formikEdit.errors.title}
+              helperText={formikEdit.errors.title}
+            />
+            <TextField
+              label='Contenido'
+              variant='outlined'
+              fullWidth
+              margin='normal'
+              name='body'
+              value={formikEdit.values.body}
+              onChange={formikEdit.handleChange}
+              error={!!formikEdit.errors.body}
+              helperText={formikEdit.errors.body}
+            />
+            <DialogActions>
+              <Button onClick={handleCloseModal} color='secondary'>
+                Cancelar
+              </Button>
+              <Button type='submit' color='primary'>
+                Guardar
+              </Button>
+            </DialogActions>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={deleteDialogOpen} onClose={handleCloseDeleteDialog}>
+        <DialogTitle>Confirmar Eliminación</DialogTitle>
+        <DialogContent>
+          <Typography>
+            ¿Estás seguro de que quieres eliminar este dato?
+          </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseModal} color='secondary'>
+          <Button onClick={handleCloseDeleteDialog} color='secondary'>
             Cancelar
           </Button>
-          <Button onClick={handleSaveEdit} color='primary'>
-            Guardar
+          <Button onClick={handleDelete} color='primary'>
+            Eliminar
           </Button>
         </DialogActions>
       </Dialog>
 
-      <Box mt={4}>
-        <Typography variant='h6'>Crear un nuevo dato:</Typography>
-        <TextField
-          label='Título'
-          variant='outlined'
-          value={newItemTitle}
-          onChange={(e) => setNewItemTitle(e.target.value)}
-          margin='normal'
-          fullWidth
-          className={styles.textField}
-        />
-        <TextField
-          label='Body'
-          variant='outlined'
-          value={newItemBody}
-          onChange={(e) => setNewItemBody(e.target.value)}
-          margin='normal'
-          fullWidth
-          className={styles.textField}
-        />
-        <Button
-          variant='contained'
-          color='secondary'
-          onClick={handleCreate}
-          className={styles.createButton}
-        >
-          Crear
-        </Button>
-      </Box>
+      <Drawer
+        anchor='right'
+        open={drawerOpen}
+        onClose={() => toggleDrawer(false)}
+      >
+        <Box className={styles.drawer}>
+          <Typography variant='h6' gutterBottom>
+            Crear nuevo dato
+          </Typography>
+          <form onSubmit={formikCreate.handleSubmit}>
+            <TextField
+              label='Título'
+              variant='outlined'
+              fullWidth
+              margin='normal'
+              name='title'
+              value={formikCreate.values.title}
+              onChange={formikCreate.handleChange}
+              error={!!formikCreate.errors.title}
+              helperText={formikCreate.errors.title}
+            />
+            <TextField
+              label='Contenido'
+              variant='outlined'
+              fullWidth
+              margin='normal'
+              name='body'
+              value={formikCreate.values.body}
+              onChange={formikCreate.handleChange}
+              error={!!formikCreate.errors.body}
+              helperText={formikCreate.errors.body}
+            />
+            <Divider sx={{ my: 2 }} />
+            <Button variant='contained' color='primary' type='submit' fullWidth>
+              Crear
+            </Button>
+          </form>
+        </Box>
+      </Drawer>
     </Box>
   );
 };
