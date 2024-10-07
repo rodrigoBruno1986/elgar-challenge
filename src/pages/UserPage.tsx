@@ -184,7 +184,7 @@ const UserPage = () => {
                 ))}
               </List>
 
-              {localData.length > 4 && (
+              {localData.length > 2 && (
                 <Paginator
                   currentPage={currentPageLocal}
                   totalPages={totalPagesLocal}
