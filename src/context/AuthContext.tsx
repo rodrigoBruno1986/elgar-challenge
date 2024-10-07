@@ -30,9 +30,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const storedRole = sessionStorage.getItem('role');
     const storedUsername = sessionStorage.getItem('username');
 
-    console.log('Token cargado desde sessionStorage:', storedToken);
-    console.log('Rol cargado desde sessionStorage:', storedRole);
-
     if (storedToken && storedRole && storedUsername) {
       setToken(storedToken);
       setUserRole(storedRole);

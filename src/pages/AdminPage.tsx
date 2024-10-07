@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import { useFormik } from 'formik';
 import dataSchema from '../validation/dataSchema';
+import useToast from '../hooks/useToast';
 import styles from './styles/AdminPage.module.css';
 
 const AdminPage = () => {
@@ -25,6 +26,8 @@ const AdminPage = () => {
   const [editedItemId, setEditedItemId] = useState<number | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<number | null>(null);
+
+  const { showSuccess } = useToast();
 
   useEffect(() => {
     const storedData = localStorage.getItem('adminData');
@@ -49,6 +52,7 @@ const AdminPage = () => {
       setLocalData(updatedData);
       saveDataToLocalStorage(updatedData);
       handleCloseModal();
+      showSuccess('Dato actualizado correctamente');
     },
   });
 
@@ -68,6 +72,7 @@ const AdminPage = () => {
       saveDataToLocalStorage(updatedData);
       setDrawerOpen(false);
       formikCreate.resetForm();
+      showSuccess('Dato creado exitosamente');
     },
   });
 
@@ -97,6 +102,7 @@ const AdminPage = () => {
     setLocalData(updatedData);
     saveDataToLocalStorage(updatedData);
     handleCloseDeleteDialog();
+    showSuccess('Dato eliminado correctamente');
   };
 
   const toggleDrawer = (open: boolean) => {
@@ -119,7 +125,7 @@ const AdminPage = () => {
           className={styles.createButton}
           onClick={() => toggleDrawer(true)}
         >
-          Crear nuevo dato
+          Crear dato
         </Button>
       </Box>
 
@@ -148,7 +154,7 @@ const AdminPage = () => {
                   className={styles.deleteButton}
                   onClick={() => handleOpenDeleteDialog(item.id)}
                 >
-                  Eliminar
+                  Borrar
                 </Button>
               </Box>
             </CardContent>

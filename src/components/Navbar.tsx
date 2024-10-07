@@ -7,17 +7,14 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-const pages = ['List', 'Edit List'];
-const settings = ['Logout'];
+const pages = ['Lista', 'Editar Lista'];
 
 function Navbar() {
   const { userRole, logout } = useAuth();
@@ -53,11 +50,11 @@ function Navbar() {
   const handleNavClick = (page: string) => {
     const currentPath = window.location.pathname;
 
-    if (page === 'List') {
+    if (page === 'Lista') {
       if (currentPath !== '/user') {
         navigate('/user');
       }
-    } else if (page === 'Edit List') {
+    } else if (page === 'Editar Lista') {
       if (userRole === 'admin' && currentPath !== '/admin') {
         navigate('/admin');
       } else if (userRole !== 'admin') {
@@ -67,37 +64,32 @@ function Navbar() {
     handleCloseNavMenu();
   };
 
-  const handleUserMenuClick = (setting: string) => {
-    if (setting === 'Logout') {
-      handleLogout();
-    } else {
-      handleCloseUserMenu();
-    }
-  };
-
   return (
     <AppBar position='static'>
       <Container maxWidth='xl'>
         <Toolbar disableGutters>
-          <Typography
-            variant='h6'
-            noWrap
+          <Box
             component='a'
             href='#'
             sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
+              mx: 'auto',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
               textDecoration: 'none',
             }}
           >
-            LOGO
-          </Typography>
+            <img
+              src='logo.png'
+              alt='Logo'
+              style={{ height: '40px', width: 'auto' }}
+            />
+          </Box>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box
+            sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
+            justifyContent='end'
+          >
             <IconButton
               size='large'
               aria-label='account of current user'
@@ -123,27 +115,12 @@ function Navbar() {
                   <Typography textAlign='center'>{page}</Typography>
                 </MenuItem>
               ))}
+
+              <MenuItem onClick={() => handleLogout()}>
+                <Typography textAlign='center'>Salir</Typography>
+              </MenuItem>
             </Menu>
           </Box>
-
-          <Typography
-            variant='h5'
-            noWrap
-            component='a'
-            href='#'
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            LOGO
-          </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
@@ -157,12 +134,11 @@ function Navbar() {
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
+          <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex' } }}>
             <Tooltip title='Open settings'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Box display='flex' alignItems='center'>
                   <AccountCircleIcon sx={{ mr: 1 }} />
-                  <ExpandMoreIcon />
                 </Box>
               </IconButton>
             </Tooltip>
